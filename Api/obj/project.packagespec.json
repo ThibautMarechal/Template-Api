@@ -1,0 +1,60 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "/Users/marechthib/RiderProjects/Base/Api/Api.csproj",
+    "projectName": "Api",
+    "projectPath": "/Users/marechthib/RiderProjects/Base/Api/Api.csproj",
+    "outputPath": "/Users/marechthib/RiderProjects/Base/Api/obj/",
+    "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+    ],
+    "originalTargetFrameworks": [
+      "netcoreapp3.0"
+    ],
+    "sources": {
+      "https://api.nuget.org/v3/index.json": {}
+    },
+    "frameworks": {
+      "netcoreapp3.0": {
+        "projectReferences": {
+          "/Users/marechthib/RiderProjects/Base/Contract/Contract.csproj": {
+            "projectPath": "/Users/marechthib/RiderProjects/Base/Contract/Contract.csproj"
+          },
+          "/Users/marechthib/RiderProjects/Base/Repository/Repository.csproj": {
+            "projectPath": "/Users/marechthib/RiderProjects/Base/Repository/Repository.csproj"
+          }
+        }
+      }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
+    }
+  },
+  "frameworks": {
+    "netcoreapp3.0": {
+      "dependencies": {
+        "Microsoft.AspNetCore.Authentication.JwtBearer": {
+          "target": "Package",
+          "version": "[3.0.0, )"
+        },
+        "System.IdentityModel.Tokens.Jwt": {
+          "target": "Package",
+          "version": "[5.6.0, )"
+        }
+      },
+      "imports": [
+        "net461",
+        "net462",
+        "net47",
+        "net471",
+        "net472",
+        "net48"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
+    }
+  }
+}
