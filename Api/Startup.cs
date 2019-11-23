@@ -25,13 +25,13 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            var appSettingsSection = Configuration.GetSection("Base");
-            services.Configure<BaseConfiguration>(appSettingsSection);
+            var appSettingsSection = Configuration.GetSection("Template");
+            services.Configure<TemplateConfiguration>(appSettingsSection);
             
-            var baseConfiguration = appSettingsSection.Get<BaseConfiguration>();
-            services.AddSingleton(baseConfiguration.Auth);
+            var templateConfiguration = appSettingsSection.Get<TemplateConfiguration>();
+            services.AddSingleton(templateConfiguration.Auth);
             
-            var key = Encoding.ASCII.GetBytes(baseConfiguration.Auth.Secret);
+            var key = Encoding.ASCII.GetBytes(templateConfiguration.Auth.Secret);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -49,8 +49,8 @@ namespace Api
                 };
             });
             services.AddAuthentication();
-            services.AddDbContext<BaseContext>(options =>
-                options.UseSqlite(baseConfiguration.Database.ConnectionString));
+            services.AddDbContext<TemplateContext>(options =>
+                options.UseSqlite(templateConfiguration.Database.ConnectionString));
             
             services.AddControllers();
             

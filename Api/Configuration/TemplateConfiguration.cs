@@ -1,6 +1,6 @@
 namespace Api.Configuration
 {
-    public class BaseConfiguration
+    public class TemplateConfiguration
     {
         public AuthConfiguration Auth { get; set; }
         public DatabaseConfiguration Database { get; set; }
