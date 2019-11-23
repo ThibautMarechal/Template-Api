@@ -1,8 +1,0 @@
-/Users/marechthib/RiderProjects/Base/Contract/bin/Debug/netcoreapp3.0/Contract.deps.json
-/Users/marechthib/RiderProjects/Base/Contract/bin/Debug/netcoreapp3.0/Contract.dll
-/Users/marechthib/RiderProjects/Base/Contract/bin/Debug/netcoreapp3.0/Contract.pdb
-/Users/marechthib/RiderProjects/Base/Contract/obj/Debug/netcoreapp3.0/Contract.csprojAssemblyReference.cache
-/Users/marechthib/RiderProjects/Base/Contract/obj/Debug/netcoreapp3.0/Contract.AssemblyInfoInputs.cache
-/Users/marechthib/RiderProjects/Base/Contract/obj/Debug/netcoreapp3.0/Contract.AssemblyInfo.cs
-/Users/marechthib/RiderProjects/Base/Contract/obj/Debug/netcoreapp3.0/Contract.dll
-/Users/marechthib/RiderProjects/Base/Contract/obj/Debug/netcoreapp3.0/Contract.pdb
