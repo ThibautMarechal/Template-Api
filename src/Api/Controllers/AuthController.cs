@@ -2,8 +2,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Api.Services;
 using Contract;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Api.Controllers
 {
@@ -21,9 +23,9 @@ namespace Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Authenticate([FromBody]User userParam)
+        public async Task<IActionResult> Authenticate([FromBody]LogIn userParam)
         {
-            var user = await _authService.Authenticate(userParam.Username, userParam.Password).ConfigureAwait(false);
+            var user = await _authService.Authenticate(userParam.UserName, userParam.Password).ConfigureAwait(false);
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
             return Ok(user);
@@ -32,11 +34,11 @@ namespace Api.Controllers
         [HttpGet("refresh-token")]
         public async Task<IActionResult> RefreshToken()
         {
-            var userId = User.FindFirst(ClaimTypes.Name)?.Value;
-            if (userId == null)
+            var userName = User.FindFirst(ClaimTypes.Name)?.Value;
+            if (userName == null)
                 return BadRequest(new { message = "Bad token" });
 
-            var user = await _authService.RefreshToken(userId).ConfigureAwait(false);
+            var user = await _authService.RefreshToken(userName).ConfigureAwait(false);
             if (user == null)
                 return BadRequest(new { message = "Bad token" });
             

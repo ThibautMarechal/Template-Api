@@ -1,13 +1,10 @@
-using System.Text;
 using Api.Configuration;
 using Api.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
 using Repository;
 
 namespace Api
@@ -25,38 +22,27 @@ namespace Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            var appSettingsSection = Configuration.GetSection("Template");
-            services.Configure<TemplateConfiguration>(appSettingsSection);
-            
-            var templateConfiguration = appSettingsSection.Get<TemplateConfiguration>();
-            services.AddSingleton(templateConfiguration.Auth);
-            
-            var key = Encoding.ASCII.GetBytes(templateConfiguration.Auth.Secret);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
-            services.AddAuthentication();
-            services.AddDbContext<TemplateContext>(options =>
-                options.UseSqlite(templateConfiguration.Database.ConnectionString));
-            
             services.AddControllers();
             
+            //Configurations
+            var appSettingsSection = Configuration.GetSection("Template");
+            services.Configure<TemplateConfiguration>(appSettingsSection);
+            var templateConfiguration = appSettingsSection.Get<TemplateConfiguration>();
+            
+            services.AddSingleton(templateConfiguration.Auth);
+            services.AddSingleton(templateConfiguration.Admin);
+            
+            //Authentications & Authorizations
+            services.AddAuth(templateConfiguration.Auth);
+            
+            //Services
             services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserRepository, UserRepository>();
+
+            //Database
+            services.AddDbContext<TemplateContext>(options =>
+                options.UseMySql(templateConfiguration.Database.ConnectionString));
+            
+            //Repositories
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

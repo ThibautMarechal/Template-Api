@@ -1,14 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Repository.Model;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
-    public class TemplateContext : DbContext
+    public class TemplateContext : IdentityDbContext
     {
 
         public TemplateContext(DbContextOptions options): base(options)
         {}
-
-        public System.Data.Entity.DbSet<User> Users { get; set; }
     }
 }
