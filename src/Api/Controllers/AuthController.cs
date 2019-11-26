@@ -2,10 +2,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Api.Services;
 using Contract;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.JsonWebTokens;
 
 namespace Api.Controllers
 {
