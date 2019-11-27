@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Repository;
 
 namespace Api
@@ -33,7 +32,7 @@ namespace Api
             services
                 .AddSingleton(templateConfiguration.Auth)
                 .AddSingleton(templateConfiguration.Admin)
-                .AddSingleton(templateConfiguration.Files);
+                .AddSingleton(templateConfiguration.Storage);
             
             //Authentications & Authorizations
             services
@@ -42,7 +41,7 @@ namespace Api
             //Services
             services
                 .AddScoped<IAuthService, AuthService>()
-                .AddScoped<IFileProvider>(_ => new PhysicalFileProvider(templateConfiguration.Files.Path) );
+                .AddScoped<IStorageService, StorageService>();
 
             //Database
             services.AddDbContext<TemplateContext>(options =>
@@ -59,7 +58,6 @@ namespace Api
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
-
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthentication();
