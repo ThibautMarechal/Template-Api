@@ -29,14 +29,19 @@ namespace Api
             services.Configure<TemplateConfiguration>(appSettingsSection);
             var templateConfiguration = appSettingsSection.Get<TemplateConfiguration>();
             
-            services.AddSingleton(templateConfiguration.Auth);
-            services.AddSingleton(templateConfiguration.Admin);
+            services
+                .AddSingleton(templateConfiguration.Auth)
+                .AddSingleton(templateConfiguration.Admin)
+                .AddSingleton(templateConfiguration.Storage);
             
             //Authentications & Authorizations
-            services.AddAuth(templateConfiguration.Auth);
+            services
+                .AddAuth(templateConfiguration.Auth);
             
             //Services
-            services.AddScoped<IAuthService, AuthService>();
+            services
+                .AddScoped<IAuthService, AuthService>()
+                .AddScoped<IStorageService, StorageService>();
 
             //Database
             services.AddDbContext<TemplateContext>(options =>
@@ -53,7 +58,6 @@ namespace Api
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
-
             app.UseAuthentication();
             app.UseRouting();
             app.UseAuthentication();

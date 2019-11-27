@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Api.Configuration;
+using Api.Exceptions.UserCreatorExceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,17 +14,36 @@ namespace Api
         {
             var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
             var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
-            
+            var adminConfig = serviceProvider.GetService<AdminConfiguration>();
+
             if (!await userManager.Users.AnyAsync().ConfigureAwait(false))
             {
-                var adminConfig = serviceProvider.GetService<AdminConfiguration>();
                 var adminUser = new IdentityUser
                 {
                     Email = adminConfig.Email,
                     UserName = adminConfig.UserName
                 };
                 adminUser.PasswordHash = userManager.PasswordHasher.HashPassword(adminUser, adminConfig.Password);
-                await userManager.CreateAsync(adminUser).ConfigureAwait(false);
+                var userCreationResult = await userManager.CreateAsync(adminUser).ConfigureAwait(false);
+                if (!userCreationResult.Succeeded)
+                    throw new CreateUserException();
+                
+                if (!await roleManager.Roles.AnyAsync().ConfigureAwait(false))
+                {
+                    var role = new IdentityRole
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = adminConfig.AdminRole,
+                    };
+                    var roleCreationResult = await roleManager.CreateAsync(role).ConfigureAwait(false);
+                    if (!roleCreationResult.Succeeded)
+                        throw new CreateRoleException();
+
+                    var applyRoleResult = await userManager.AddToRoleAsync(adminUser, adminConfig.AdminRole).ConfigureAwait(false);
+                    if(!applyRoleResult.Succeeded)
+                        throw new ApplyRoleException();
+
+                }
             }
         }
     }

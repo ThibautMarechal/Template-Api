@@ -1,0 +1,15 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+
+namespace Api.Services
+{
+    public interface IStorageService
+    {
+        IEnumerable<string> GetFiles();
+        Task<string> CreateFile(IFormFile file);
+        void DeleteFile(string file);
+        Stream GetFile(string file);
+    }
+}
