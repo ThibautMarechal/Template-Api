@@ -42,13 +42,12 @@ namespace Api.Controllers
         
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> UploadFile(List<IFormFile> file)
+        public async Task<IActionResult> UploadFileAsync(List<IFormFile> file)
         {
             if (file.Count != 1)
-            {
                 return UnprocessableEntity();
-            }
-            var fileId = await _storageService.CreateFile(file[0]).ConfigureAwait(false);
+            
+            var fileId = await _storageService.CreateFileAsync(file[0]).ConfigureAwait(false);
             return Accepted($"{Request.Path}/{fileId}");
         }        
         

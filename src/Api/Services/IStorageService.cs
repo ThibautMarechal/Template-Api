@@ -8,7 +8,7 @@ namespace Api.Services
     public interface IStorageService
     {
         IEnumerable<string> GetFiles();
-        Task<string> CreateFile(IFormFile file);
+        Task<string> CreateFileAsync(IFormFile file);
         void DeleteFile(string file);
         Stream GetFile(string file);
     }

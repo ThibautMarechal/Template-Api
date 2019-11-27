@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Api.Configuration;
+using Api.Constants;
 using Api.Exceptions.UserCreatorExceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,10 @@ namespace Api
         {
             var userManager = serviceProvider.GetService<UserManager<IdentityUser>>();
             var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
-            var adminConfig = serviceProvider.GetService<AdminConfiguration>();
 
             if (!await userManager.Users.AnyAsync().ConfigureAwait(false))
-            {
+            {            
+                var adminConfig = serviceProvider.GetService<AdminConfiguration>();
                 var adminUser = new IdentityUser
                 {
                     Email = adminConfig.Email,
@@ -33,7 +34,7 @@ namespace Api
                     var role = new IdentityRole
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Name = adminConfig.AdminRole,
+                        Name = Auth.AdminRole,
                     };
                     var roleCreationResult = await roleManager.CreateAsync(role).ConfigureAwait(false);
                     if (!roleCreationResult.Succeeded)
@@ -42,7 +43,6 @@ namespace Api
                     var applyRoleResult = await userManager.AddToRoleAsync(adminUser, adminConfig.AdminRole).ConfigureAwait(false);
                     if(!applyRoleResult.Succeeded)
                         throw new ApplyRoleException();
-
                 }
             }
         }

@@ -4,13 +4,11 @@ namespace Api.Exceptions.StorageExceptions
 {
     public class StorageFileDeleteException : Exception
     {
-        private readonly string _file;
-        private readonly Exception _innerException;
+        public string File { get; }
 
-        public StorageFileDeleteException(string file, Exception innerException): base($"The file \"{file}\" cannot be deleted")
+        public StorageFileDeleteException(string file, Exception innerException): base($"The file \"{file}\" cannot be deleted", innerException)
         {
-            _file = file;
-            _innerException = innerException;
+            File = file;
         }
     }
 }

@@ -21,22 +21,23 @@ namespace Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<IActionResult> Authenticate([FromBody]LogIn userParam)
+        public async Task<IActionResult> AuthenticateAsync([FromBody]LogIn userParam)
         {
-            var user = await _authService.Authenticate(userParam.UserName, userParam.Password).ConfigureAwait(false);
+            var user = await _authService.AuthenticateAsync(userParam.UserName, userParam.Password).ConfigureAwait(false);
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
+            
             return Ok(user);
         }
         
         [HttpGet("refresh-token")]
-        public async Task<IActionResult> RefreshToken()
+        public async Task<IActionResult> RefreshTokenAsync()
         {
             var userName = User.FindFirst(ClaimTypes.Name)?.Value;
             if (userName == null)
                 return BadRequest(new { message = "Bad token" });
 
-            var user = await _authService.RefreshToken(userName).ConfigureAwait(false);
+            var user = await _authService.RefreshTokenAsync(userName).ConfigureAwait(false);
             if (user == null)
                 return BadRequest(new { message = "Bad token" });
             

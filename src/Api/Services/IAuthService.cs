@@ -5,7 +5,7 @@ namespace Api.Services
 {
     public interface IAuthService
     {
-        Task<User> Authenticate(string userName, string password);
-        Task<User> RefreshToken(string userName);
+        Task<User> AuthenticateAsync(string userName, string password);
+        Task<User> RefreshTokenAsync(string userName);
     }
 }

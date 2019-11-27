@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -25,7 +26,7 @@ namespace Api.Services
             _signInManager = signInManager;
         }
 
-        private string GenerateToken(string userName, string email)
+        private string GenerateToken(string userName, string email, IEnumerable<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_authConfiguration.Secret);
@@ -35,6 +36,7 @@ namespace Api.Services
                 {
                     new Claim(ClaimTypes.Name, userName),
                     new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.Role, string.Join(',', roles)),
                 }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -43,7 +45,7 @@ namespace Api.Services
             return tokenHandler.WriteToken(token);
         }
         
-        public async Task<User> Authenticate(string userName, string password)
+        public async Task<User> AuthenticateAsync(string userName, string password)
         {
             var identityUser = _userManager.Users.SingleOrDefault(u => userName == u.UserName);
             if (identityUser == null)
@@ -53,20 +55,20 @@ namespace Api.Services
             if (!signInResult.Succeeded)
                 return null;
 
-            return GetUserContract(identityUser);
+            return await GetUserContractAsync(identityUser).ConfigureAwait(false);
         }
 
-        public Task<User> RefreshToken(string userName)
+        public async Task<User> RefreshTokenAsync(string userName)
         {
             var identityUser = _userManager.Users.SingleOrDefault(u => userName == u.UserName);
-            return Task.FromResult(identityUser == null ? null : GetUserContract(identityUser));
+            return identityUser == null ? null : await GetUserContractAsync(identityUser).ConfigureAwait(false);
         }
         
-        private User GetUserContract(IdentityUser identityUser)
+        private async Task<User> GetUserContractAsync(IdentityUser identityUser)
         {
             var user = identityUser.ToContract();
-            user.Token = GenerateToken(user.Username, user.Email);
-            return user;
+            var roles = await _userManager.GetRolesAsync(identityUser).ConfigureAwait(false);
+            return user.WithToken(GenerateToken(user.Username, user.Email, roles));
         }
     }
 }

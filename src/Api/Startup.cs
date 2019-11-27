@@ -41,7 +41,8 @@ namespace Api
             //Services
             services
                 .AddScoped<IAuthService, AuthService>()
-                .AddScoped<IStorageService, StorageService>();
+                .AddScoped<IStorageService, StorageService>()
+                .AddScoped<IUserService, UserService>();
 
             //Database
             services.AddDbContext<TemplateContext>(options =>

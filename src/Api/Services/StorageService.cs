@@ -20,7 +20,7 @@ namespace Api.Services
 
         public IEnumerable<string> GetFiles() =>  Directory.GetFiles(_storageConfiguration.Path).Select(Path.GetFileName);
 
-        public async Task<string> CreateFile(IFormFile file)
+        public async Task<string> CreateFileAsync(IFormFile file)
         {
             var contentType = file.ContentType.Substring(file.ContentType.IndexOf("/", StringComparison.Ordinal) + 1);
             var fileId = $"{ Guid.NewGuid().ToString()}.{contentType}";
