@@ -11,6 +11,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("/storage")]
+    [Authorize]
     public class Storage : ControllerBase
     {
         private readonly IStorageService _storageService;
@@ -21,12 +22,12 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IEnumerable<string> GetAllFiles()
         {
             return _storageService.GetFiles();
         }        
         
+        [AllowAnonymous]
         [HttpGet("{file}")]
         public IActionResult GetFile([FromRoute(Name = "file")] string file)
         {
@@ -41,7 +42,6 @@ namespace Api.Controllers
         }
         
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> UploadFileAsync(List<IFormFile> file)
         {
             if (file.Count != 1)
@@ -52,7 +52,6 @@ namespace Api.Controllers
         }        
         
         [HttpDelete("{file}")]
-        [Authorize]
         public IActionResult DeleteFile([FromRoute(Name = "file")] string file)
         {
             try
