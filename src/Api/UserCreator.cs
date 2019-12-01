@@ -34,7 +34,7 @@ namespace Api
                     var role = new IdentityRole
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Name = Auth.AdminRole,
+                        Name = Role.Admin,
                     };
                     var roleCreationResult = await roleManager.CreateAsync(role).ConfigureAwait(false);
                     if (!roleCreationResult.Succeeded)

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Api.Constants;
 using Api.Exceptions.UserServiceExceptions;
 using Api.Services;
+using Api.Services.User;
 using Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("/user")]
-    [Authorize(Roles = Auth.AdminRole)]
+    [Authorize(Roles = Role.Admin)]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;

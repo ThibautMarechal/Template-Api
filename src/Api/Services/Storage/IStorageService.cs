@@ -3,7 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Api.Services
+namespace Api.Services.Storage
 {
     public interface IStorageService
     {

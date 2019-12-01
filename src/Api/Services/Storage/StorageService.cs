@@ -7,7 +7,7 @@ using Api.Configuration;
 using Api.Exceptions.StorageExceptions;
 using Microsoft.AspNetCore.Http;
 
-namespace Api.Services
+namespace Api.Services.Storage
 {
     public class StorageService : IStorageService
     {

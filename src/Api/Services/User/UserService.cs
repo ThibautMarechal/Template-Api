@@ -4,11 +4,10 @@ using System.Threading.Tasks;
 using Api.Configuration;
 using Api.Exceptions.UserServiceExceptions;
 using Api.Mappers;
-using Contract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Api.Services
+namespace Api.Services.User
 {
     public class UserService : IUserService
     {
@@ -21,7 +20,7 @@ namespace Api.Services
             _adminConfiguration = adminConfiguration;
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<Contract.User>> GetAllAsync()
         {
             return await _userManager.Users
                 .Select(u => u.ToContract())
@@ -29,7 +28,7 @@ namespace Api.Services
                 .ConfigureAwait(false);
         }
 
-        public async Task<User> GetByUserNameAsync(string userName)
+        public async Task<Contract.User> GetByUserNameAsync(string userName)
         {
             var identityUser = await GetIdentityUserByUserNameAsync(userName).ConfigureAwait(false);
             if (identityUser == null)
@@ -47,7 +46,7 @@ namespace Api.Services
             await _userManager.DeleteAsync(identityUser);
         }
 
-        public async Task<User> UpdateUserAsync(User user, string password)
+        public async Task<Contract.User> UpdateUserAsync(Contract.User user, string password)
         {
             if (user.Username == _adminConfiguration.UserName)
                 throw new UserAdminException();
@@ -63,7 +62,7 @@ namespace Api.Services
             return identityUser.ToContract();
         }
 
-        public async Task<User> CreateUserAsync(User user, string password)
+        public async Task<Contract.User> CreateUserAsync(Contract.User user, string password)
         {
             var identityUser = await GetIdentityUserByUserNameAsync(user.Username).ConfigureAwait(false);
             if (identityUser != null)

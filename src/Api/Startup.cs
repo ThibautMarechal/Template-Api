@@ -1,5 +1,9 @@
 using Api.Configuration;
 using Api.Services;
+using Api.Services.Auth;
+using Api.Services.Mail;
+using Api.Services.Storage;
+using Api.Services.User;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +36,8 @@ namespace Api
             services
                 .AddSingleton(templateConfiguration.Auth)
                 .AddSingleton(templateConfiguration.Admin)
-                .AddSingleton(templateConfiguration.Storage);
+                .AddSingleton(templateConfiguration.Storage)
+                .AddSingleton(templateConfiguration.Mail);
             
             //Authentications & Authorizations
             services
@@ -42,7 +47,8 @@ namespace Api
             services
                 .AddScoped<IAuthService, AuthService>()
                 .AddScoped<IStorageService, StorageService>()
-                .AddScoped<IUserService, UserService>();
+                .AddScoped<IUserService, UserService>()
+                .AddScoped<IMailService, MailService>();
 
             //Database
             services.AddDbContext<TemplateContext>(options =>

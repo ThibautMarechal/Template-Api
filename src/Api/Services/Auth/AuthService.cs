@@ -7,11 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Api.Configuration;
 using Api.Mappers;
-using Contract;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Api.Services
+namespace Api.Services.Auth
 {
     public class AuthService : IAuthService
     {
@@ -45,7 +44,7 @@ namespace Api.Services
             return tokenHandler.WriteToken(token);
         }
         
-        public async Task<User> AuthenticateAsync(string userName, string password)
+        public async Task<Contract.User> AuthenticateAsync(string userName, string password)
         {
             var identityUser = _userManager.Users.SingleOrDefault(u => userName == u.UserName);
             if (identityUser == null)
@@ -58,13 +57,13 @@ namespace Api.Services
             return await GetUserContractAsync(identityUser).ConfigureAwait(false);
         }
 
-        public async Task<User> RefreshTokenAsync(string userName)
+        public async Task<Contract.User> RefreshTokenAsync(string userName)
         {
             var identityUser = _userManager.Users.SingleOrDefault(u => userName == u.UserName);
             return identityUser == null ? null : await GetUserContractAsync(identityUser).ConfigureAwait(false);
         }
         
-        private async Task<User> GetUserContractAsync(IdentityUser identityUser)
+        private async Task<Contract.User> GetUserContractAsync(IdentityUser identityUser)
         {
             var user = identityUser.ToContract();
             var roles = await _userManager.GetRolesAsync(identityUser).ConfigureAwait(false);

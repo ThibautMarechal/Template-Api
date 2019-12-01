@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Api.Services;
+using Api.Services.Auth;
 using Contract;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

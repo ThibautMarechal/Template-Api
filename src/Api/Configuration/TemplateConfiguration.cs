@@ -6,5 +6,6 @@ namespace Api.Configuration
         public DatabaseConfiguration Database { get; set; } = new DatabaseConfiguration();
         public AdminConfiguration Admin { get; set; } = new AdminConfiguration();
         public StorageConfiguration Storage { get; set; } = new StorageConfiguration();
+        public MailConfiguration Mail { get; set; } = new MailConfiguration();
     }
 }
