@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Api.Configuration;
 using Api.Exceptions.StorageExceptions;
@@ -11,6 +12,7 @@ namespace Api.Services.Storage
 {
     public class StorageService : IStorageService
     {
+        private const string ContentTypeSuffix = "-content-type";
         private readonly StorageConfiguration _storageConfiguration; 
 
         public StorageService(StorageConfiguration storageConfiguration)
@@ -22,12 +24,15 @@ namespace Api.Services.Storage
 
         public async Task<string> CreateFileAsync(IFormFile file)
         {
-            var contentType = file.ContentType.Substring(file.ContentType.IndexOf("/", StringComparison.Ordinal) + 1);
-            var fileId = $"{ Guid.NewGuid().ToString()}.{contentType}";
+            var fileId = Guid.NewGuid().ToString();
             try
             {
-                await using var stream = File.Create(Path.Combine(_storageConfiguration.Path, fileId));
+                var filePath = Path.Combine(_storageConfiguration.Path, fileId);
+                await using var stream = File.Create(filePath);
                 await file.CopyToAsync(stream);
+                await using var contentTypeStream =
+                    File.Create($"{filePath}{ContentTypeSuffix}");
+                await contentTypeStream.WriteAsync(new UnicodeEncoding().GetBytes(file.ContentType));
             }
             catch (Exception e)
             {
@@ -51,11 +56,13 @@ namespace Api.Services.Storage
             }
         }
 
-        public Stream GetFile(string fileId)
+        public Stream GetFile(string fileId, out string contentType)
         {
             var filePath = Path.Combine(_storageConfiguration.Path, fileId);
-            if (!File.Exists(Path.Combine(_storageConfiguration.Path, filePath)))
+            var fileContentTypePath = $"{filePath}{ContentTypeSuffix}";
+            if (!File.Exists(filePath) || !File.Exists(fileContentTypePath))
                 throw new StorageFileNotFoundException(fileId);
+            contentType = File.ReadAllText(fileContentTypePath, Encoding.Unicode);
             return File.OpenRead(filePath);
         }
     }

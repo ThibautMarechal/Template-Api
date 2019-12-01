@@ -34,7 +34,8 @@ namespace Api.Controllers
         {
             try
             {
-                return File(_storageService.GetFile(file), MediaTypeNames.Image.Jpeg);
+                var stream = _storageService.GetFile(file, out var contentType);
+                return File(stream, contentType);
             }
             catch (StorageFileNotFoundException)
             {

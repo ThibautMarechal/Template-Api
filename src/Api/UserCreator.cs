@@ -40,7 +40,7 @@ namespace Api
                     if (!roleCreationResult.Succeeded)
                         throw new CreateRoleException();
 
-                    var applyRoleResult = await userManager.AddToRoleAsync(adminUser, adminConfig.AdminRole).ConfigureAwait(false);
+                    var applyRoleResult = await userManager.AddToRoleAsync(adminUser, Role.Admin).ConfigureAwait(false);
                     if(!applyRoleResult.Succeeded)
                         throw new ApplyRoleException();
                 }

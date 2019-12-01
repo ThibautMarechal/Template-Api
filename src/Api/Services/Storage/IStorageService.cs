@@ -10,6 +10,6 @@ namespace Api.Services.Storage
         IEnumerable<string> GetFiles();
         Task<string> CreateFileAsync(IFormFile file);
         void DeleteFile(string file);
-        Stream GetFile(string file);
+        Stream GetFile(string file, out string contentType);
     }
 }
