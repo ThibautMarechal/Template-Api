@@ -69,7 +69,9 @@ namespace Api
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
